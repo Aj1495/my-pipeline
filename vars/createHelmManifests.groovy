@@ -24,9 +24,11 @@ def call(String serviceName, String branchName) {
             if [ "${branchName}" = "main" ]; then
               ENV="production"
               sed -i "s|tag:.*|tag: ${env.BUILD_NUMBER}|" values.yaml
+              sed -i 's/port: 80/port: 3000/' values.yaml
             else
               ENV="staging"
               sed -i "s|tag:.*|tag: ${env.BUILD_NUMBER}-${branchName}|" values.yaml
+              sed -i 's/port: 80/port: 3000/' values.yaml
             fi
             
             # Ensure the environment directory exists
