@@ -23,8 +23,10 @@ def call(String serviceName, String branchName) {
             # Determine environment based on branch
             if [ "${branchName}" = "main" ]; then
               ENV="production"
+              sed -i "s|tag:.*|tag: ${env.BUILD_NUMBER}|" values.yaml
             else
               ENV="staging"
+              sed -i "s|tag:.*|tag: ${env.BUILD_NUMBER}-${branchName}|" values.yaml
             fi
             
             # Ensure the environment directory exists
@@ -32,9 +34,10 @@ def call(String serviceName, String branchName) {
             cd \$ENV
             
             # Create Helm chart if it doesn't exist
-            ls -ltrh ../
-            ls -ltrh ../../ 
-
+            cd ../../ 
+            helm template "${serviceName}" -s templates/argocd-ingress.yaml > "${serviceName}"/\$ENV/argocd-ingress.yaml
+            helm template "${serviceName}" -s templates/service.yaml > "${serviceName}"/\$ENV/service.yaml
+            helm template "${serviceName}" -s templates/deployment.yaml > "${serviceName}"/\$ENV/deployment.yaml
           """
         } catch (Exception e) {
           currentBuild.result = 'FAILURE'

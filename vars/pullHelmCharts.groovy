@@ -14,8 +14,9 @@ def call(String serviceName, String branchName) {
 
             rm -rf k8s-manifests-repo
             mkdir k8s-manifests-repo
-            git clone https://\$GIT_USER:\$GIT_TOKEN@github.com/skswami91/k8s-manifests-2025.git k8s-manifests-repo
             cd k8s-manifests-repo
+            git remote add origin https://\$GIT_USER:\$GIT_TOKEN@github.com/skswami91/k8s-manifests-2025.git
+            git pull origin main
             
             # Create directory for service if it doesn't exist
             mkdir -p ${serviceName}
