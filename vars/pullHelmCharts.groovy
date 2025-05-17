@@ -15,6 +15,7 @@ def call(String serviceName, String branchName) {
             rm -rf k8s-manifests-repo
             mkdir k8s-manifests-repo
             cd k8s-manifests-repo
+            git init
             git remote add origin https://\$GIT_USER:\$GIT_TOKEN@github.com/skswami91/k8s-manifests-2025.git
             git pull origin main
             
