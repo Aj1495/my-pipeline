@@ -19,15 +19,9 @@ def call(String serviceName, String branchName) {
             git config user.email skswami91@gmail.com
             git config user.name skswami91
             
-            # Determine environment for commit message
-            if [[ "${branchName}" == "main" ]]; then
-              ENV="production"
-            else
-              ENV="staging"
-            fi
 
             git add .
-            git commit -m "Updating ${ENV} manifests for ${serviceName} - build #${env.BUILD_NUMBER}"
+            git commit -m "Updating manifests for ${serviceName} - build #${env.BUILD_NUMBER}"
             git push origin main
 
           """
