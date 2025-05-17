@@ -19,11 +19,14 @@ def call(String serviceName, String branchName) {
             git config user.email skswami91@gmail.com
             git config user.name skswami91
             
-
+            # Get the current branch name
+            CURRENT_BRANCH=\$(git rev-parse --abbrev-ref HEAD)
+            
             git add .
             git commit -m "Updating manifests for ${serviceName} - build #${env.BUILD_NUMBER}"
-            git push origin main --force
-
+            
+            # Push to the same branch name that we're on
+            git push origin \$CURRENT_BRANCH --force
           """
         } catch (Exception e) {
           currentBuild.result = 'FAILURE'
