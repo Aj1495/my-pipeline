@@ -60,17 +60,17 @@ def call(String masterBuild) {
       * Call your shared library functions, each in its own stage
       */
 
-      // stage('Build Docker Image') {
-      //   container('docker') {
-      //     dockerBuild(SERVICE_NAME, git_app_branch)
-      //   }
-      // }
+       stage('Build Docker Image') {
+         container('docker') {
+           dockerBuild(SERVICE_NAME, git_app_branch)
+         }
+       }
 
-      // stage('Push Docker Image') {
-      //   container('docker') {
-      //     dockerPush(SERVICE_NAME, git_app_branch)
-      //   }
-      // }
+       stage('Push Docker Image') {
+         container('docker') {
+           dockerPush(SERVICE_NAME, git_app_branch)
+         }
+       }
       stage('Pull Kubernetes Manifests') {
         pullHelmCharts(SERVICE_NAME, git_app_branch)
       }
