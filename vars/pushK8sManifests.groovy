@@ -22,7 +22,7 @@ def call(String serviceName, String branchName) {
 
             git add .
             git commit -m "Updating manifests for ${serviceName} - build #${env.BUILD_NUMBER}"
-            git push origin main
+            git push origin main --force
 
           """
         } catch (Exception e) {
