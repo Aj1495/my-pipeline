@@ -32,7 +32,8 @@ def call(String serviceName, String branchName) {
             cd \$ENV
             
             # Create Helm chart if it doesn't exist
-            helm template 
+            ls -ltrh ../
+            ls -ltrh ../../ 
 
           """
         } catch (Exception e) {
