@@ -17,18 +17,12 @@ def call(String serviceName, String branchName) {
             git clone https://\$GIT_USER:\$GIT_TOKEN@github.com/skswami91/k8s-manifests-2025.git k8s-manifests-repo
             cd k8s-manifests-repo
             
-            # These are redundant after clone, removing them
-            # git init
-            # git config --global user.email skswami91@gmail.com
-            # git config --global user.name skswami91
-            # git remote add origin https://\$GIT_USER:\$GIT_TOKEN@github.com/skswami91/k8s-manifests-2025.git
-            
             # Create directory for service if it doesn't exist
             mkdir -p ${serviceName}
             cd ${serviceName}
             
             # Create environment-specific directory based on branch
-            if [[ "${branchName}" == "main" ]]; then
+            if [ "${branchName}" = "main" ]; then
               mkdir -p production
             else
               mkdir -p staging

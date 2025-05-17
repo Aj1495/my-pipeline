@@ -21,12 +21,14 @@ def call(String serviceName, String branchName) {
             cd k8s-manifests-repo/${serviceName}
             
             # Determine environment based on branch
-            if [[ "${branchName}" == "main" ]]; then
+            if [ "${branchName}" = "main" ]; then
               ENV="production"
             else
               ENV="staging"
             fi
             
+            # Ensure the environment directory exists
+            mkdir -p \$ENV
             cd \$ENV
             
             # Create Helm chart if it doesn't exist
