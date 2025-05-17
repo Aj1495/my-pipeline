@@ -25,10 +25,12 @@ def call(String serviceName, String branchName) {
               ENV="production"
               sed -i "s|tag:.*|tag: ${env.BUILD_NUMBER}|" values.yaml
               sed -i 's/port: 80/port: 3000/' values.yaml
+              sed -i 's/port: {{ .Values.service.port }}/port: {{ .Values.argocdIngress.servicePort }}/' templates/service.yaml
             else
               ENV="staging"
               sed -i "s|tag:.*|tag: ${env.BUILD_NUMBER}-${branchName}|" values.yaml
               sed -i 's/port: 80/port: 3000/' values.yaml
+              sed -i 's/port: {{ .Values.service.port }}/port: {{ .Values.argocdIngress.servicePort }}/' templates/service.yaml
             fi
             
             # Ensure the environment directory exists
