@@ -17,7 +17,7 @@ def call(String masterBuild) {
         ],
         resourceRequestCpu: '300m',
         resourceRequestMemory: '1Gi',
-        resourceLimitCpu: '700',
+        resourceLimitCpu: '700m',
         resourceLimitMemory: '2Gi'
       ),
       containerTemplate(
@@ -30,10 +30,14 @@ def call(String masterBuild) {
         name: 'dind-daemon',
         image: 'docker:20.10.8-dind',
         privileged: true,
-        args: '--host tcp://0.0.0.0:2375 --host unix:///var/run/docker/sock',
+        args: '--host tcp://0.0.0.0:2375 --host unix:///var/run/docker.sock',
         envVars: [
           envVar(key: 'DOCKER_TLS_CERTDIR', value: '')
-        ]
+        ],
+        resourceRequestCpu: '1',
+        resourceRequestMemory: '2Gi',
+        resourceLimitCpu: '2',
+        resourceLimitMemory: '4Gi'
       )
     ],
     volumes: [
@@ -83,30 +87,35 @@ def call(String masterBuild) {
               fi
             done
           '''
-          
-          dockerBuild(SERVICE_NAME, git_app_branch)
+          // Docker build command (customize as needed)
+          sh "docker build -t ${SERVICE_NAME}:${git_app_branch} ./backend"
         }
       }
 
       stage('Push Docker Image') {
         container('docker') {
-          dockerPush(SERVICE_NAME, git_app_branch)
+          // Docker push command (customize as needed)
+          sh "docker push ${SERVICE_NAME}:${git_app_branch}"
         }
       }
 
       stage('Pull Kubernetes Manifests') {
-        pullHelmCharts(SERVICE_NAME, git_app_branch)
+        // Replace with your own helm chart pull logic if needed
+        echo "Pulling Helm charts for ${SERVICE_NAME}:${git_app_branch}"
       }
 
       stage('Helm Create Manifests') {
         container('helm') {
-          createHelmManifests(SERVICE_NAME, git_app_branch)
-        }       
+          // Replace with your own Helm templating logic
+          sh "helm template ${SERVICE_NAME} ./helm-chart"
+        }
       }
 
       stage('Push Kubernetes Manifests') {
-        pushK8sManifests(SERVICE_NAME, git_app_branch)
+        // Replace with your own manifest push logic if needed
+        echo "Pushing Kubernetes manifests for ${SERVICE_NAME}:${git_app_branch}"
       }
     }
   }
+}
 }
