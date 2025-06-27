@@ -15,16 +15,20 @@ def call(String masterBuild) {
           envVar(key: 'DOCKER_HOST', value: 'tcp://localhost:2375'),
           envVar(key: 'DOCKER_TLS_CERTDIR', value: '')
         ],
-        resourceRequestCpu: '300m',
-        resourceRequestMemory: '1Gi',
-        resourceLimitCpu: '700m',
-        resourceLimitMemory: '2Gi'
+        resourceRequestCpu: '100m',
+        resourceRequestMemory: '512Mi',
+        resourceLimitCpu: '300m',
+        resourceLimitMemory: '1Gi'
       ),
       containerTemplate(
         name: 'helm',
         image: 'alpine/helm:3.13.0',
         command: 'cat',
-        ttyEnabled: true
+        ttyEnabled: true,
+        resourceRequestCpu: '50m',
+        resourceRequestMemory: '128Mi',
+        resourceLimitCpu: '100m',
+        resourceLimitMemory: '256Mi'
       ),
       containerTemplate(
         name: 'dind-daemon',
@@ -34,10 +38,10 @@ def call(String masterBuild) {
         envVars: [
           envVar(key: 'DOCKER_TLS_CERTDIR', value: '')
         ],
-        resourceRequestCpu: '1',
-        resourceRequestMemory: '2Gi',
-        resourceLimitCpu: '2',
-        resourceLimitMemory: '4Gi'
+        resourceRequestCpu: '200m',
+        resourceRequestMemory: '512Mi',
+        resourceLimitCpu: '500m',
+        resourceLimitMemory: '1Gi'
       )
     ],
     volumes: [
