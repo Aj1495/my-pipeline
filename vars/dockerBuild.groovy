@@ -23,15 +23,14 @@ def call(String serviceName, String branchName) {
                done
            '''
 
- 
           if (branchName in ["main", "staging", "preprod", "production", "master"]) {
             echo "Building Docker image for production like environment ... "
-            sh "docker build -t ${serviceName}:${env.BUILD_NUMBER} ./app"
+            sh "docker build -t ${serviceName}:${env.BUILD_NUMBER} ./backend"
           } else {
             echo "Building Docker image for non-production environment... "
-            sh "docker build -t ${serviceName}:${env.BUILD_NUMBER}-${branchName} ./app"
+            sh "docker build -t ${serviceName}:${env.BUILD_NUMBER}-${branchName} ./backend"
           }
-        
+
         } catch (Exception e) {
           currentBuild.result = 'FAILURE'
           throw e
