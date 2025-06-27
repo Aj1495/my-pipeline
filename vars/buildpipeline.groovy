@@ -100,8 +100,14 @@ def call(String masterBuild) {
 
       stage('Push Docker Image') {
         container('docker') {
-          // Docker push command (customize as needed)
-          sh "docker push ${SERVICE_NAME}:${git_app_branch}"
+          // Login to Docker Hub
+          sh 'echo "dckr_pat_GMFO7_mex0Zx6lR0It2uoSYyDZQ" | docker login -u bobthe1495 --password-stdin'
+          
+          // Tag with your Docker Hub username
+          sh "docker tag ${SERVICE_NAME}:${git_app_branch} bobthe1495/${SERVICE_NAME}:${git_app_branch}"
+          
+          // Docker push command
+          sh "docker push bobthe1495/${SERVICE_NAME}:${git_app_branch}"
         }
       }
 
