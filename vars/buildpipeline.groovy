@@ -78,19 +78,21 @@ def call(String masterBuild) {
           // Wait for Docker daemon to be ready
           sh '''
             echo "Waiting for Docker daemon to be ready..."
-            for i in {1..30}; do
-              if docker info > /dev/null 2>&1; then
-                echo "Docker daemon is ready!"
-                break
-              fi
-              echo "Docker daemon not ready yet... retrying in 3s"
-              sleep 3
-              if [ $i -eq 30 ]; then
-                echo "Docker daemon failed to start after 90 seconds"
-                exit 1
-              fi
-            done
-          '''
+            i=1
+            while [ $i -le 30 ]; do
+            if docker info > /dev/null 2>&1; then
+              echo "Docker daemon is ready!"
+              break
+            fi
+            echo "Docker daemon not ready yet... retrying in 3s"
+            sleep 3
+            if [ $i -eq 30 ]; then
+              echo "Docker daemon failed to start after 90 seconds"
+              exit 1
+            fi
+            i=$((i+1))
+          done
+        '''
           // Docker build command (customize as needed)
           sh "docker build -t ${SERVICE_NAME}:${git_app_branch} ./backend"
         }
