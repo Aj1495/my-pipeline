@@ -100,8 +100,10 @@ def call(String masterBuild) {
 
       stage('Push Docker Image') {
         container('docker') {
-          // Login to Docker Hub
-          sh 'echo "dckr_pat_GMFO7_mex0Zx6lR0It2uoSYyDZQ" | docker login -u bobthe1495 --password-stdin'
+          // Login to Docker Hub using Jenkins credentials
+          withCredentials([usernamePassword(credentialsId: 'dockerCreds', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+            sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
+          }
           
           // Tag with your Docker Hub username
           sh "docker tag ${SERVICE_NAME}:${git_app_branch} bobthe1495/${SERVICE_NAME}:${git_app_branch}"
