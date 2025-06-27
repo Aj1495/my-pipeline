@@ -10,7 +10,8 @@ def call(String masterBuild) {
         name: 'docker',
         image: 'docker:20.10.8',
         command: 'cat',
-
+        ttyEnabled: true,
+        envVars: [
           envVar(key: 'DOCKER_HOST', value: 'tcp://localhost:2375'),
           envVar(key: 'DOCKER_TLS_CERTDIR', value: '')
         ],
@@ -79,19 +80,19 @@ def call(String masterBuild) {
             echo "Waiting for Docker daemon to be ready..."
             i=1
             while [ $i -le 30 ]; do
-            if docker info > /dev/null 2>&1; then
-              echo "Docker daemon is ready!"
-              break
-            fi
-            echo "Docker daemon not ready yet... retrying in 3s"
-            sleep 3
-            if [ $i -eq 30 ]; then
-              echo "Docker daemon failed to start after 90 seconds"
-              exit 1
-            fi
-            i=$((i+1))
-          done
-        '''
+              if docker info > /dev/null 2>&1; then
+                echo "Docker daemon is ready!"
+                break
+              fi
+              echo "Docker daemon not ready yet... retrying in 3s"
+              sleep 3
+              if [ $i -eq 30 ]; then
+                echo "Docker daemon failed to start after 90 seconds"
+                exit 1
+              fi
+              i=$((i+1))
+            done
+          '''
           // Docker build command (customize as needed)
           sh "docker build -t ${SERVICE_NAME}:${git_app_branch} ./backend"
         }
