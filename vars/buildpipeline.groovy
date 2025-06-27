@@ -10,15 +10,14 @@ def call(String masterBuild) {
         name: 'docker',
         image: 'docker:20.10.8',
         command: 'cat',
-        ttyEnabled: true,
-        envVars: [
+
           envVar(key: 'DOCKER_HOST', value: 'tcp://localhost:2375'),
           envVar(key: 'DOCKER_TLS_CERTDIR', value: '')
         ],
-        resourceRequestCpu: '100m',
-        resourceRequestMemory: '512Mi',
-        resourceLimitCpu: '300m',
-        resourceLimitMemory: '1Gi'
+        resourceRequestCpu: '200m',
+        resourceRequestMemory: '1.5Gi',
+        resourceLimitCpu: '500m',
+        resourceLimitMemory: '2.5Gi'
       ),
       containerTemplate(
         name: 'helm',
