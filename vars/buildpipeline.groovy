@@ -15,9 +15,9 @@ def call(String masterBuild) {
           envVar(key: 'DOCKER_HOST', value: 'tcp://localhost:2375'),
           envVar(key: 'DOCKER_TLS_CERTDIR', value: '')
         ],
-        resourceRequestCpu: '1',
+        resourceRequestCpu: '0.5',
         resourceRequestMemory: '2Gi',
-        resourceLimitCpu: '2',
+        resourceLimitCpu: '1',
         resourceLimitMemory: '4Gi'
       ),
       containerTemplate(
