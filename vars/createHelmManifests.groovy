@@ -16,32 +16,8 @@ def call(String serviceName, String branchName) {
         try {
           sh """ 
             echo "Creating Helm charts for ${serviceName}..."
-            
-            # Navigate to the k8s manifests repo directory
-            cd k8s-manifests-repo/${serviceName}
-            
-            # Determine environment based on branch
-            if [ "${branchName}" = "main" ]; then
-              ENV="production"
-              sed -i "s|tag:.*|tag: ${env.BUILD_NUMBER}|" values.yaml
-              sed -i 's/port: 80/port: 3000/' values.yaml
-              sed -i 's/port: {{ .Values.service.port }}/port: {{ .Values.argocdIngress.servicePort }}/' templates/service.yaml
-            else
-              ENV="staging"
-              sed -i "s|tag:.*|tag: ${env.BUILD_NUMBER}-${branchName}|" values.yaml
-              sed -i 's/port: 80/port: 3000/' values.yaml
-              sed -i 's/port: {{ .Values.service.port }}/port: {{ .Values.argocdIngress.servicePort }}/' templates/service.yaml
-            fi
-            
-            # Ensure the environment directory exists
-            mkdir -p \$ENV
-            cd \$ENV
-            
-            # Create Helm chart if it doesn't exist
-            cd ../../ 
-            helm template "${serviceName}" -s templates/argocd-ingress.yaml > "${serviceName}"/\$ENV/argocd-ingress.yaml
-            helm template "${serviceName}" -s templates/service.yaml > "${serviceName}"/\$ENV/service.yaml
-            helm template "${serviceName}" -s templates/deployment.yaml > "${serviceName}"/\$ENV/deployment.yaml
+            # Use the correct Helm chart path
+            helm template "${serviceName}" k8s-mainfest/kubernetes-2025
           """
         } catch (Exception e) {
           currentBuild.result = 'FAILURE'
@@ -51,4 +27,3 @@ def call(String serviceName, String branchName) {
     }
   }
 }
-      
