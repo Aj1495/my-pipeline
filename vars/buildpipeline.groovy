@@ -104,29 +104,33 @@ def call(String masterBuild) {
           withCredentials([usernamePassword(credentialsId: 'dockerCreds', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
             sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
           }
-          
+
           // Tag with your Docker Hub username
           sh "docker tag ${SERVICE_NAME}:${git_app_branch} bobthe1495/${SERVICE_NAME}:${git_app_branch}"
-          
+
           // Docker push command
           sh "docker push bobthe1495/${SERVICE_NAME}:${git_app_branch}"
         }
       }
 
       stage('Pull Kubernetes Manifests') {
-        // Replace with your own helm chart pull logic if needed
         echo "Pulling Helm charts for ${SERVICE_NAME}:${git_app_branch}"
+      }
+
+      stage('Clone K8s Manifests Repo') {
+        sh '''
+          rm -rf k8s-mainfest
+          git clone https://github.com/Aj1495/k8smain.git k8s-mainfest
+        '''
       }
 
       stage('Helm Create Manifests') {
         container('helm') {
-          // Replace with your own Helm templating logic
           sh "helm template ${SERVICE_NAME} k8s-mainfest/kubernetes-2025"
         }
       }
 
       stage('Push Kubernetes Manifests') {
-        // Replace with your own manifest push logic if needed
         echo "Pushing Kubernetes manifests for ${SERVICE_NAME}:${git_app_branch}"
       }
     }
