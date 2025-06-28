@@ -15,6 +15,7 @@ def call(String serviceName, String branchName) {
       ]) {
         try {
           sh """ 
+            echo "=== UPDATED SHARED LIBRARY CODE - JANUARY 2025 ==="
             echo "Creating Helm charts for ${serviceName}..."
             # Use the correct Helm chart path
             helm template "${serviceName}" k8s-mainfest/kubernetes-2025
@@ -26,4 +27,4 @@ def call(String serviceName, String branchName) {
       }
     }
   }
-}
+}}
