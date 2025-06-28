@@ -121,7 +121,7 @@ def call(String masterBuild) {
       stage('Helm Create Manifests') {
         container('helm') {
           // Replace with your own Helm templating logic
-          sh "helm template ${SERVICE_NAME} ./helm-chart"
+          sh "helm template ${SERVICE_NAME} k8s-mainfest/kubernetes-2025"
         }
       }
 
